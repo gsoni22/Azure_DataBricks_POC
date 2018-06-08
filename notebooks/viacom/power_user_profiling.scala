@@ -51,8 +51,16 @@ var z=sysdate.get(Calendar.YEAR)
 val sysdate = Calendar.getInstance();
 var x=sysdate.get(Calendar.YEAR)
 val gender= loadData.filter($"distinct_id" === powerUserFlagTable.col("distinct_id")).
-select($"date_stamp_ist",$"distinct_id",$"lr_gender",$"manufacturer",$"lr_birthdate".cast(DateType),$"region", when($"lr_gender".isNull,"Other").otherwise($"lr_gender"), when($"lr_birthdate".isNotNull,minusUDF(year($"lr_birthdate".cast(DateType))))). drop("lr_gender").withColumnRenamed("CASE WHEN (lr_gender IS NULL) THEN Other ELSE lr_gender END","Gender").withColumnRenamed("CASE WHEN (lr_birthdate IS NOT NULL) THEN UDF(year(cast(lr_birthdate as date))) END","Age").groupBy("date_stamp_ist","manufacturer","region","Gender","Age").agg(countDistinct($"distinct_id"))
+select($"date_stamp_ist",$"distinct_id",$"lr_gender",$"manufacturer",$"lr_birthdate".cast(DateType),$"region", when($"lr_gender".isNull,"Other").otherwise($"lr_gender"), when($"lr_birthdate".isNotNull,minusUDF(year($"lr_birthdate".cast(DateType))))). drop("lr_gender").withColumnRenamed("CASE WHEN (lr_gender IS NULL) THEN Other ELSE lr_gender END","Gender").withColumnRenamed("CASE WHEN (lr_birthdate IS NOT NULL) THEN UDF(year(cast(lr_birthdate as date))) END","Age").groupBy("date_stamp_ist","manufacturer","region","Gender","Age").agg(countDistinct($"distinct_id")).withColumnRenamed("count(DISTINCT distinct_id)","unique_count")
 
 // COMMAND ----------
 
 display(gender)
+
+// COMMAND ----------
+
+val gen_rdd=gender.rdd
+
+// COMMAND ----------
+
+gen_rdd.collect.foreach(println)
