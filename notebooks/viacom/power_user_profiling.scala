@@ -64,3 +64,10 @@ val gen_rdd=gender.rdd
 // COMMAND ----------
 
 gen_rdd.collect.foreach(println)
+
+// COMMAND ----------
+
+// Apply script in scala code to shet down the system
+
+// COMMAND ----------
+
