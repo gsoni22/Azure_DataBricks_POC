@@ -63,11 +63,21 @@ val gen_rdd=gender.rdd
 
 // COMMAND ----------
 
-gen_rdd.collect.foreach(println)
+
 
 // COMMAND ----------
 
-// Apply script in scala code to shet down the system
+display(loadData)
+
+// COMMAND ----------
+
+loadData.select("event").agg(countDistinct("event")).count
+
+// COMMAND ----------
+
+testDF.write
+.option("createTableColumnTypes","Country VARCHAR(100), `Item Type` VARCHAR(100), `Unit Cost` VARCHAR(100), `Unit Price` VARCHAR(100)")
+.jdbc(jdbcUrl, "testTableFinal", connectionProperties)
 
 // COMMAND ----------
 
